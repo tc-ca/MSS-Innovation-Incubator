@@ -1,0 +1,93 @@
+﻿<p>Gross Tonnage: @grossTonnageValue</p>
+<p>@messageText</p>
+
+<button class="btn btn-primary" @onclick="CalculateGrossTonnage">Click me</button>
+
+@code {
+    private string messageText = string.Empty;
+    private string grossTonnageValue = string.Empty;
+
+    [Parameter]
+    public int Length { get; set; } = 0;
+
+    [Parameter]
+    public int Breadth { get; set; } = 0;
+
+    [Parameter]
+    public BlazorPOC.Data.VesselHelper.VesselType VesselDimensionType { get; set; }
+
+    [Parameter]
+    public EventCallback<int> LengthChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<int> BreadthChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<BlazorPOC.Data.VesselHelper.VesselType> VesselDimensionTypeChanged { get; set; }
+
+
+    public void CalculateGrossTonnage()
+    {
+        if (Length <= 12)
+        {
+            grossTonnageValue = Length.ToString();
+            messageText = string.Empty;
+        }
+        else if (Length > 1 && Length <= 15)
+        {
+            var vesselFactor = 1;
+            switch (VesselDimensionType)
+            {
+                case Data.VesselHelper.VesselType.unknown:
+                    vesselFactor = 1;
+                    break;
+                case Data.VesselHelper.VesselType.Small:
+                    vesselFactor = 2;
+                    break;
+                case Data.VesselHelper.VesselType.Medium:
+                    vesselFactor = 3;
+                    break;
+                case Data.VesselHelper.VesselType.Large:
+                    vesselFactor = 4;
+                    break;
+            }
+
+            grossTonnageValue = (Length * Breadth * vesselFactor).ToString();
+            messageText = "You need a photo of your vessel";
+
+        }
+        else
+        {
+            grossTonnageValue = string.Empty;
+            messageText = "You must get your vessel surveyed";
+
+        }
+    }
+
+    private Task OnLengthChanged(ChangeEventArgs e)
+    {
+        Length = int.Parse(e.Value.ToString());
+        return LengthChanged.InvokeAsync(Length);
+    }
+
+    private Task OnBreadthChanged(ChangeEventArgs e)
+    {
+        Breadth = int.Parse(e.Value.ToString());
+        return BreadthChanged.InvokeAsync(Breadth);
+    }
+
+
+    private Task OnVesselDimensionTypeChanged(ChangeEventArgs e)
+    {
+
+        string vessel = e.Value.ToString();
+
+        VesselDimensionType = Enum.Parse<BlazorPOC.Data.VesselHelper.VesselType>(vessel);
+
+        return VesselDimensionTypeChanged.InvokeAsync(VesselDimensionType);
+    }
+
+}
+
+
+

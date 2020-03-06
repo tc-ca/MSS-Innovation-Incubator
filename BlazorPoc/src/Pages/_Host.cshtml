@@ -1,0 +1,115 @@
+﻿@page "/"
+
+@namespace BlazorPOC.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Http
+@using BlazorPOC.Utilities
+@inject SharedResourceMgt _localizer;
+
+@inject IHttpContextAccessor httpContextAccessor
+
+@inject GoC.WebTemplate.Components.Core.Services.ModelAccessor ModelAccessor
+@{
+    GoC.WebTemplate.Components.Model WebTemplateModel;
+    WebTemplateModel = ModelAccessor.Model;
+    CdtsSettings.Create(httpContextAccessor.HttpContext.Request.Path.Value, WebTemplateModel, _localizer);
+}
+
+<!DOCTYPE html>
+
+<!--[if lt IE 9]><html class="no-js lt-ie9" lang="@WebTemplateModel.TwoLetterCultureLanguage" dir="ltr"><![endif]-->
+<!--[if gt IE 8]><!-->
+<html xmlns="http://www.w3.org/1999/xhtml" class="no-js" lang="@WebTemplateModel.TwoLetterCultureLanguage" dir="ltr">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <!-- Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
+        wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html -->
+    <title>@WebTemplateModel.Render.HeaderTitle()</title>
+    <base href="/" />
+    <link href="css/site.css" rel="stylesheet" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <!-- Load closure template scripts -->
+    <script type="text/javascript" src="@string.Concat(WebTemplateModel.CDNPath, "soyutils.js")"></script>
+    <script type="text/javascript" src="@string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}wet-{1}.js", WebTemplateModel.CDNPath, WebTemplateModel.TwoLetterCultureLanguage)"></script>
+    <noscript>
+        <!-- Write closure fall-back static file -->
+        @WebTemplateModel.LoadStaticFile("refTop.html")
+    </noscript>
+    <!-- Write closure template -->
+    <script type="text/javascript">
+        document.write(wet.builder.refTop(@WebTemplateModel.Render.RefTop(isApplication : true)));
+    </script>
+    @WebTemplateModel.Render.HtmlHeaderElements()
+</head>
+
+<body vocab="http://schema.org/" typeof="WebPage">
+    @WebTemplateModel.Render.SessionTimeoutControl()
+    <div id="def-top">
+        <!-- Write closure fall-back static file -->
+        @WebTemplateModel.LoadStaticFile(string.Concat("top-", WebTemplateModel.TwoLetterCultureLanguage, ".html"))
+    </div>
+    <!-- Write closure template -->
+    <script type="text/javascript">
+        var defTop = document.getElementById("def-top");
+        var isApp = false;
+        if (isApp) {
+            defTop.outerHTML = wet.builder.appTop({
+                "lngLinks": [{ "lang": "fr", "text": "Français" }],
+                "topSecMenu": false,
+                "siteMenu": true,
+		        "appName": [{"text": "Vessel Registration", "href": "#"}],
+		        "signOut": [{"href": "#"}],
+		        "customSearch": "test",
+	        });
+        } else {
+           defTop.outerHTML = wet.builder.top(@WebTemplateModel.Render.Top());
+        }
+        function UpdateSwitchLanguage(url) {
+            $("a[lang]").attr('href', url);
+        }
+         function UpdateBreadcrumbs(breadcrums) {
+           $("ol.breadcrumb").html(breadcrums);
+        }
+    </script>
+    <div class="container">
+        <!-- the main content -->
+        <app>
+            @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
+        </app>
+        <!-- end main content -->
+        <div id="def-preFooter">
+            <!-- Write closure fall-back static file -->
+            @WebTemplateModel.LoadStaticFile(string.Concat("preFooter-", WebTemplateModel.TwoLetterCultureLanguage, ".html"))
+        </div>
+        <!-- Write closure template -->
+        <script type="text/javascript">
+                    var defPreFooter = document.getElementById("def-preFooter");
+                    defPreFooter.outerHTML = wet.builder.preFooter(@WebTemplateModel.Render.PreFooter());
+        </script>
+    </div>
+    <div id="def-footer">
+        <!-- Write closure fall-back static file -->
+        @WebTemplateModel.LoadStaticFile(string.Concat("footer-", WebTemplateModel.TwoLetterCultureLanguage, ".html"))
+    </div>
+    <!-- Write closure template -->
+    <script type="text/javascript">
+    var defFooter = document.getElementById("def-footer");
+        defFooter.outerHTML = wet.builder.footer(@WebTemplateModel.Render.Footer());
+    </script>
+    <!-- Write closure template -->
+    <script type="text/javascript">
+    document.write(wet.builder.refFooter(@WebTemplateModel.Render.RefFooter()));
+    </script>
+    @WebTemplateModel.Render.HtmlBodyElements()
+    <script src="_framework/blazor.server.js"></script>
+    <script src="~/script/helper.js"></script>
+    <script>
+        if (window.location.pathname == "/") {
+            window.location.href = "/en";
+        }
+    </script>
+</body>
+</html>
+
+

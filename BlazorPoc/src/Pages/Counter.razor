@@ -1,0 +1,24 @@
+﻿@page "/{LanguageCode}/counter"
+
+@inherits BasePageComponent
+@inject SharedResourceMgt _localizer
+
+    <h1>@_localizer[nameof(SharedResource.Counter)]</h1>
+
+<p>Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+    protected override void OnInitialized()
+    {
+        SetSwitchLanguage();
+    }
+
+}

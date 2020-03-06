@@ -1,0 +1,52 @@
+﻿@inherits VesselDimensionBase
+
+@page "/{LanguageCode}/vesseldimension"
+@inject IJSRuntime JSRuntime;
+@inject SharedResourceMgt _localizer
+
+@using BlazorPOC.Data;
+
+
+    <h1>@_localizer[nameof(SharedResource.VesselDimensions)]</h1>
+    <EditForm Model="@vesselDimensionModel" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+         <label>
+            Length:
+            @* <InputNumber id="vesselLength"  @bind-Value="vesselDimensionModel.Length"  @onkeypress="KeyPress"  @onblur="OnBlurLengthCalculate"  />*@
+            <InputNumber id="vesselLength" @bind-Value="vesselDimensionModel.Length"  @onblur="OnBlurLengthCalculate" />
+            @*<InputNumber id="vesselLength" @bind-Value="vesselDimensionModel.Length" @bind-Value:event="onblur" @on   @onchange="OnChangeCalculate" />*@
+        </label>
+
+
+      
+        @if (vesselDimensionModel.Length > 12 && vesselDimensionModel.Length <= 15)
+        {
+            <label>
+                Breadth:
+                <InputNumber id="vesselBreadth" @bind-Value="vesselDimensionModel.Breadth" @onblur="OnBlurCalculate" ParsingErrorMessage=@_localizer[nameof(Resources.SharedResource.VesselBreadthNumeric)]/>
+            </label>
+
+            <label>
+                Vessel Type:
+                <InputSelect id="vesselType" @bind-Value="vesselDimensionModel.TypeOfVessel" @onblur="OnBlurCalculate">
+                    @foreach (int vessel in Enum.GetValues(typeof(VesselHelper.VesselType)))
+                        {
+                        <option value="@Enum.GetName(typeof(VesselHelper.VesselType), vessel)">@Enum.GetName(typeof(VesselHelper.VesselType), vessel)</option>
+                        }
+                    /**/
+                    /**/
+                    /**/
+                </InputSelect>
+            </label>
+        }
+
+        <button type="submit">Calculate Gross Tonnage</button>
+    </EditForm>
+
+<GrossTonnage @ref="grossTonnage" @bind-Length="vesselDimensionModel.Length"
+              @bind-Breadth="vesselDimensionModel.Breadth"
+              @bind-VesselDimensionType="vesselDimensionModel.TypeOfVessel" />
+
+
+

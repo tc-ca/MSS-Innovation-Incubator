@@ -1,0 +1,16 @@
+﻿@page "/{LanguageCode}"
+
+@inherits BasePageComponent
+@inject SharedResourceMgt _localizer
+<h1>@_localizer[nameof(Resources.SharedResource.HelloWorld)]</h1>
+
+<p>@_localizer[nameof(Resources.SharedResource.HelloWorldText)]</p>
+
+@code {
+    protected override void OnInitialized()
+    {
+        SetSwitchLanguage();
+    }
+}
+
+

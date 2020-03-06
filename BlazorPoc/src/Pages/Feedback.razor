@@ -1,0 +1,41 @@
+﻿@inherits FeedbackBase
+
+@page "/{LanguageCode}/feedback"
+
+@using BlazorPOC.Data
+
+<h1>Vessel Registry Feedback</h1>
+<p>Please leave feedback on your experience withthe vessel registry process</p>
+<div class="mrgn-bttm-lg">
+    <EditForm Model="@Model" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit">
+        <div class="alert @StatusClass">@StatusMessage</div>
+
+        <FluentValidationValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="givenName">Given name:</label>
+            <InputText id=givenName class="form-control full-width" @bind-Value="@Model.GivenName"></InputText>
+            <ValidationMessage For="@(() => Model.GivenName)" />
+        </div>
+
+        <div class="form-group">
+            <label for="surname">Suname:</label>
+            <InputText id=surname class="form-control full-width" @bind-Value="@Model.Surname"></InputText>
+            <ValidationMessage For="@(() => Model.Surname)" />
+        </div>
+
+        <div class="form-group">
+            <label for="e-mail">EmailAddress:</label>
+            <InputText id=EmailAddress class="form-control full-width" @bind-Value="@Model.EmailAddress"></InputText>
+            <ValidationMessage For="@(() => Model.EmailAddress)" />
+        </div>
+
+        <div class="form-group">
+            <label for="body">Text:</label>
+            <InputTextArea id=body class="form-control full-width" @bind-Value="@Model.Text"></InputTextArea>
+            <ValidationMessage For="@(() => Model.Text)" />
+        </div>
+        <button type="submit">Ok</button>
+    </EditForm>
+</div>
