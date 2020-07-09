@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 using BlazorPOC.Utilities;
 using GoC.WebTemplate.Components.Core.Services;
 
+// Test git 
 namespace BlazorPOC
 {
     public class Startup
